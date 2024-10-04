@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="0dp"
-        android:layout_height="53dp"
-        android:background="#00128E"
-        >
+    <!-- <RelativeLayout
+         android:id="@+id/header"
+         android:layout_width="0dp"
+         android:layout_height="53dp"
+         android:background="#00128E"
+         /> -->
+
 </androidx.constraintlayout.widget.ConstraintLayout>

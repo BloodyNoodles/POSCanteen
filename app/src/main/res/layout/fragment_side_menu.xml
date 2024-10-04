@@ -114,29 +114,33 @@
             </RelativeLayout>
 
             <!-- Product Option -->
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/addProduct"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
+                android:layout_height="50dp">
 
+                <!-- Product ImageView -->
                 <ImageView
+                    android:id="@+id/productImage"
                     android:layout_width="30dp"
                     android:layout_height="35dp"
-                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/product"
                     app:tint="@color/white" />
 
+                <!-- Product TextView -->
                 <TextView
+                    android:id="@+id/productText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Product"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"/>
-            </LinearLayout>
+                    android:layout_toEndOf="@id/productImage"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp" />
+            </RelativeLayout>
 
             <!-- Inventory Option -->
             <LinearLayout

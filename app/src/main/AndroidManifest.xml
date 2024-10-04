@@ -27,7 +27,11 @@
         <activity android:name=".register"></activity>
         <activity android:name=".checkout" />
         <activity android:name=".transaction" />
-        <activity android:name=".AddProductActivity" />
+        <activity
+            android:name=".AddProductActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name">
+        </activity>
 
         <activity android:name=".profile" />
         <activity android:name=".transactionHistory" />

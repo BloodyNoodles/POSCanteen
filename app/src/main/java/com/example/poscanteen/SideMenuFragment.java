@@ -25,9 +25,9 @@ public class SideMenuFragment extends Fragment {
     private boolean isMenuVisible = false;
     private LinearLayout sideMenu;                                     // WAG NYO TOH GALAWINNNN
     FrameLayout sideMenuLayout;                                        // WAG NYO TOH GALAWINNNN
-    LinearLayout addProduct, home;
+    LinearLayout home;
     MaterialTextView transactionHistory;
-    RelativeLayout profile;
+    RelativeLayout profile, addProduct;
 
     @Nullable
     @Override
