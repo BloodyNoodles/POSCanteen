@@ -38,7 +38,7 @@ public class register extends AppCompatActivity {
         // Initialize UI elements
         usernameInput = findViewById(R.id.usernameInput);
         emailInput = findViewById(R.id.emailInput);
-        passwordInput  = findViewById(R.id.passwordInput);
+        passwordInput = findViewById(R.id.passwordInput);
         confirmPasswordInput = findViewById(R.id.confirmPasswordInput);
         registerButton = findViewById(R.id.registerBtn);
         loginText = findViewById(R.id.logintxt);
@@ -88,10 +88,10 @@ public class register extends AppCompatActivity {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Registration successful, store the username in Firestore
+                        // Registration successful, store the email and password in Firestore
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            storeUserData(user.getUid(), username, email);
+                            storeUserData(user.getUid(), email, password); // Change here
                         }
                     } else {
                         // Registration failed, show an error message
@@ -101,11 +101,11 @@ public class register extends AppCompatActivity {
     }
 
     // Method to store user data in Firestore
-    private void storeUserData(String userId, String username, String email) {
+    private void storeUserData(String userId, String email, String password) { // Change here
         // Create a map for user data
         Map<String, Object> userData = new HashMap<>();
-        userData.put("username", username);
         userData.put("email", email);
+        userData.put("password", password);
 
         // Store data in Firestore
         db.collection("users").document(userId)

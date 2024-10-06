@@ -19,8 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import com.bumptech.glide.Glide;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +29,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddProductActivity extends AppCompatActivity {
@@ -60,17 +62,20 @@ public class AddProductActivity extends AppCompatActivity {
         // Get current user
         currentUser = mAuth.getCurrentUser();
 
-        // Initialize views after setting the content view
+        // Initialize views
         menuBtn = findViewById(R.id.menubtn);
-        addonContainer = findViewById(R.id.addonContainer); // Make sure the addonContainer ID matches your XML
-        addAddonButton = findViewById(R.id.addAddonButton);
-        addSizeButton = findViewById(R.id.addSizeButton); // Initialize addSizeButton
+        addonContainer = findViewById(R.id.addonContainer);
         sizeContainer = findViewById(R.id.sizeContainer);
-
-        // Initialize buttons
+        addAddonButton = findViewById(R.id.addAddonButton);
+        addSizeButton = findViewById(R.id.addSizeButton);
         addButton = findViewById(R.id.addButton);
         cancelButton = findViewById(R.id.cancelButton);
         imageButton = findViewById(R.id.imageButton);
+
+        // Initialize EditText fields
+        productName = findViewById(R.id.productName);
+        sellingPrice = findViewById(R.id.sellingPriceInput);
+        description = findViewById(R.id.descriptionInput);
 
         // Set the click listener for the add button
         addButton.setOnClickListener(v -> saveProduct());
@@ -82,9 +87,7 @@ public class AddProductActivity extends AppCompatActivity {
         addSizeButton.setOnClickListener(v -> addNewSizeField());
 
         // Set click listener for the cancel button
-        cancelButton.setOnClickListener(v -> {
-            finish(); // This will take you back to the previous activity
-        });
+        cancelButton.setOnClickListener(v -> finish());
 
         // Set click listener for image selection
         imageButton.setOnClickListener(v -> openFileChooser());
@@ -100,7 +103,7 @@ public class AddProductActivity extends AppCompatActivity {
         menuBtn.setOnClickListener(v -> {
             SideMenuFragment fragment = (SideMenuFragment) getSupportFragmentManager().findFragmentById(R.id.sideMenus);
             if (fragment != null) {
-                fragment.toggleSideMenu(); // Ensure the fragment is properly initialized before toggling
+                fragment.toggleSideMenu();
             }
         });
     }
@@ -120,14 +123,13 @@ public class AddProductActivity extends AppCompatActivity {
             imageUri = data.getData();
             // Display the selected image in the ImageView
             ImageView selectedImageView = findViewById(R.id.selectedImageView);
-            selectedImageView.setVisibility(View.VISIBLE); // Make it visible
-            selectedImageView.setImageURI(imageUri); // Set the image URI
+            selectedImageView.setVisibility(View.VISIBLE);
+            selectedImageView.setImageURI(imageUri);
         }
     }
 
-    // FOR ADD-ON FUNCTION (CLASS) ONLY
+    // Method to add new add-on field
     private void addNewAddonField() {
-        // Create a new horizontal LinearLayout to hold both the EditText and the Button
         LinearLayout addonLayout = new LinearLayout(this);
         addonLayout.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -136,43 +138,34 @@ public class AddProductActivity extends AppCompatActivity {
         layoutParams.setMargins(0, 10, 0, 10);
         addonLayout.setLayoutParams(layoutParams);
 
-        // Create new EditText dynamically
         EditText newAddonField = new EditText(this);
-        newAddonField.setHint("Enter an add-on here");  // Set a generic hint
+        newAddonField.setHint("Enter an add-on here");
         newAddonField.setInputType(InputType.TYPE_CLASS_TEXT);
         LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                1.0f); // Weight of 1 to take up available space
+                1.0f);
         newAddonField.setLayoutParams(editTextParams);
-
-        // Set border background if needed
         newAddonField.setBackground(ContextCompat.getDrawable(this, R.drawable.quantity_border));
 
-        // Create a "Remove" button
         Button removeButton = new Button(this);
         removeButton.setText("Remove");
         removeButton.setBackgroundColor(ContextCompat.getColor(this, R.color.blue));
-        removeButton.setTextColor(ContextCompat.getColor(this, android.R.color.white));  // Make text white
+        removeButton.setTextColor(ContextCompat.getColor(this, android.R.color.white));
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         removeButton.setLayoutParams(buttonParams);
 
-        // Set click listener to remove the addonLayout when "Remove" button is clicked
         removeButton.setOnClickListener(v -> addonContainer.removeView(addonLayout));
 
-        // Add the EditText and Button to the horizontal LinearLayout
         addonLayout.addView(newAddonField);
         addonLayout.addView(removeButton);
-
-        // Add the horizontal LinearLayout to the container
         addonContainer.addView(addonLayout);
     }
 
-    // FUNCTION TO ADD SIZE
+    // Method to add new size field
     private void addNewSizeField() {
-        // Create a new horizontal LinearLayout to hold both the EditText and the Button
         LinearLayout sizeLayout = new LinearLayout(this);
         sizeLayout.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -181,76 +174,90 @@ public class AddProductActivity extends AppCompatActivity {
         layoutParams.setMargins(0, 10, 0, 10);
         sizeLayout.setLayoutParams(layoutParams);
 
-        // Create new EditText dynamically for size
         EditText newSizeField = new EditText(this);
-        newSizeField.setHint("Enter size");  // Set a generic hint
+        newSizeField.setHint("Enter size");
         newSizeField.setInputType(InputType.TYPE_CLASS_TEXT);
         LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                1.0f); // Weight of 1 to take up available space
+                1.0f);
         newSizeField.setLayoutParams(editTextParams);
-
-        // Set border background if needed
         newSizeField.setBackground(ContextCompat.getDrawable(this, R.drawable.quantity_border));
 
-        // Create a "Remove" button
         Button removeButton = new Button(this);
         removeButton.setText("Remove");
         removeButton.setBackgroundColor(ContextCompat.getColor(this, R.color.blue));
-        removeButton.setTextColor(ContextCompat.getColor(this, android.R.color.white));  // Make text white
+        removeButton.setTextColor(ContextCompat.getColor(this, android.R.color.white));
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         removeButton.setLayoutParams(buttonParams);
 
-        // Set click listener to remove the sizeLayout when "Remove" button is clicked
         removeButton.setOnClickListener(v -> sizeContainer.removeView(sizeLayout));
 
-        // Add the EditText and Button to the horizontal LinearLayout
         sizeLayout.addView(newSizeField);
         sizeLayout.addView(removeButton);
-
-        // Add the horizontal LinearLayout to the container
         sizeContainer.addView(sizeLayout);
     }
 
     // Method to save the product
     private void saveProduct() {
-        currentUser = mAuth.getCurrentUser(); // Ensure this is updated
+        currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            String enteredProductName = ((EditText) findViewById(R.id.productName)).getText().toString().trim();
-            String sellingPrice = ((EditText) findViewById(R.id.sellingPriceInput)).getText().toString().trim();
-            String description = ((EditText) findViewById(R.id.descriptionInput)).getText().toString().trim();
+            String enteredProductName = productName.getText().toString().trim();
+            String sellingPriceStr = sellingPrice.getText().toString().trim();
+            String descriptionStr = description.getText().toString().trim();
 
-            // Get selected category from RadioGroup
             RadioGroup radioGroup = findViewById(R.id.radioGroup);
             int selectedId = radioGroup.getCheckedRadioButtonId();
             String category = "";
-            if (selectedId != -1) { // Check if any radio button is selected
+            if (selectedId != -1) {
                 RadioButton selectedRadioButton = findViewById(selectedId);
                 category = selectedRadioButton.getText().toString();
             }
 
             // Validate inputs before saving
-            if (enteredProductName.isEmpty() || sellingPrice.isEmpty() || description.isEmpty() || category.isEmpty()) {
+            if (enteredProductName.isEmpty() || sellingPriceStr.isEmpty() || descriptionStr.isEmpty() || category.isEmpty()) {
                 Toast.makeText(AddProductActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 return;
+            }
+
+            // Get the add-ons
+            List<String> addOns = new ArrayList<>();
+            for (int i = 0; i < addonContainer.getChildCount(); i++) {
+                LinearLayout addonLayout = (LinearLayout) addonContainer.getChildAt(i);
+                EditText addonInput = (EditText) addonLayout.getChildAt(0);
+                String addonText = addonInput.getText().toString().trim();
+                if (!addonText.isEmpty()) {
+                    addOns.add(addonText);
+                }
+            }
+
+            // Get the sizes
+            List<String> sizes = new ArrayList<>();
+            for (int i = 0; i < sizeContainer.getChildCount(); i++) {
+                LinearLayout sizeLayout = (LinearLayout) sizeContainer.getChildAt(i);
+                EditText sizeInput = (EditText) sizeLayout.getChildAt(0);
+                String sizeText = sizeInput.getText().toString().trim();
+                if (!sizeText.isEmpty()) {
+                    sizes.add(sizeText);
+                }
             }
 
             // Create a product object
             Map<String, Object> product = new HashMap<>();
             product.put("name", enteredProductName);
             product.put("category", category);
-            product.put("price", sellingPrice);
-            product.put("description", description);
+            product.put("price", sellingPriceStr);
+            product.put("description", descriptionStr);
+            product.put("addOns", addOns);
+            product.put("sizes", sizes);
 
             // Check if an image is selected and upload it
             if (imageUri != null) {
                 uploadImage(userId, product);
             } else {
-                // Save product without image if none is selected
                 saveProductToFirestore(userId, product);
             }
         } else {
@@ -263,20 +270,11 @@ public class AddProductActivity extends AppCompatActivity {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child("images/" + userId + "/" + System.currentTimeMillis() + ".jpg");
 
-        // Upload the image
         UploadTask uploadTask = storageRef.putFile(imageUri);
         uploadTask.addOnSuccessListener(taskSnapshot -> {
             // Get the download URL
             storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                // Add the image URL to the product map
                 product.put("imageUrl", uri.toString());
-
-                // Display the uploaded image
-                ImageView selectedImageView = findViewById(R.id.selectedImageView);
-                selectedImageView.setVisibility(View.VISIBLE); // Make it visible
-                Glide.with(this).load(uri.toString()).into(selectedImageView); // Load the image using Glide or any image loading library
-
-                // Save product to Firestore
                 saveProductToFirestore(userId, product);
             }).addOnFailureListener(e -> {
                 Toast.makeText(AddProductActivity.this, "Failed to get image URL", Toast.LENGTH_SHORT).show();
@@ -286,13 +284,11 @@ public class AddProductActivity extends AppCompatActivity {
         });
     }
 
-
     // Method to save the product to Firestore
     private void saveProductToFirestore(String userId, Map<String, Object> product) {
         db.collection("users").document(userId).collection("products")
                 .add(product)
                 .addOnSuccessListener(documentReference -> {
-                    // Clear all fields after successfully adding the product
                     clearFields();
                     Toast.makeText(AddProductActivity.this, "Product added!", Toast.LENGTH_SHORT).show();
                 })
@@ -303,12 +299,13 @@ public class AddProductActivity extends AppCompatActivity {
 
     // Method to clear all input fields
     private void clearFields() {
-        ((EditText) findViewById(R.id.productName)).setText("");
-        ((EditText) findViewById(R.id.sellingPriceInput)).setText("");
-        ((EditText) findViewById(R.id.descriptionInput)).setText("");
-        addonContainer.removeAllViews(); // Clear add-ons
-        sizeContainer.removeAllViews(); // Clear sizes
-        imageUri = null; // Reset image URI
-        // You can reset any other fields or states as necessary
+        productName.setText("");
+        sellingPrice.setText("");
+        description.setText("");
+        addonContainer.removeAllViews();
+        sizeContainer.removeAllViews();
+        imageUri = null;
+        ImageView selectedImageView = findViewById(R.id.selectedImageView);
+        selectedImageView.setVisibility(View.GONE); // Hide the image view after clearing
     }
 }
