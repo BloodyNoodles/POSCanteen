@@ -1,37 +1,47 @@
 package com.example.poscanteen;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import android.widget.Button; // Add this import
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.android.material.textview.MaterialTextView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import com.bumptech.glide.Glide;
 
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class AddProductActivity extends AppCompatActivity {
 
-    private ImageButton menuBtn;
-    private int addonCount = 0; // Initialize addonCount
-    private LinearLayout addonContainer, sizeContainer; // Initialize addonContainer
-    private Button addAddonButton, addSizeButton, addButton, cancelButton;
+    private static final int PICK_IMAGE_REQUEST = 1; // Code for picking images
+    private Uri imageUri; // To hold the image URI
 
+    private ImageButton menuBtn; // Image button for selecting images
+    private LinearLayout addonContainer, sizeContainer; // Initialize addonContainer
+    private Button addAddonButton, addSizeButton, addButton, cancelButton, imageButton;
 
     private EditText productName, sellingPrice, description;
-
-
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -50,18 +60,20 @@ public class AddProductActivity extends AppCompatActivity {
         // Get current user
         currentUser = mAuth.getCurrentUser();
 
-        // Find the Add button
-        Button addButton = findViewById(R.id.addButton);
-        addButton.setOnClickListener(v -> saveProduct());
-
         // Initialize views after setting the content view
         menuBtn = findViewById(R.id.menubtn);
         addonContainer = findViewById(R.id.addonContainer); // Make sure the addonContainer ID matches your XML
         addAddonButton = findViewById(R.id.addAddonButton);
         addSizeButton = findViewById(R.id.addSizeButton); // Initialize addSizeButton
-
-        // Initialize sizeContainer
         sizeContainer = findViewById(R.id.sizeContainer);
+
+        // Initialize buttons
+        addButton = findViewById(R.id.addButton);
+        cancelButton = findViewById(R.id.cancelButton);
+        imageButton = findViewById(R.id.imageButton);
+
+        // Set the click listener for the add button
+        addButton.setOnClickListener(v -> saveProduct());
 
         // Set the click listener for the addAddonButton to add new add-ons dynamically
         addAddonButton.setOnClickListener(v -> addNewAddonField());
@@ -69,12 +81,13 @@ public class AddProductActivity extends AppCompatActivity {
         // Set the click listener for the addSizeButton to add new sizes dynamically
         addSizeButton.setOnClickListener(v -> addNewSizeField());
 
-        // Find the Cancel button and set its OnClickListener
-        cancelButton = findViewById(R.id.cancelButton);
+        // Set click listener for the cancel button
         cancelButton.setOnClickListener(v -> {
-            // Finish the current activity and return to the previous one
             finish(); // This will take you back to the previous activity
         });
+
+        // Set click listener for image selection
+        imageButton.setOnClickListener(v -> openFileChooser());
 
         // Add the fragment to the activity
         if (savedInstanceState == null) {
@@ -92,9 +105,27 @@ public class AddProductActivity extends AppCompatActivity {
         });
     }
 
+    // Method to open file chooser for images
+    private void openFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE_REQUEST);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            // Display the selected image in the ImageView
+            ImageView selectedImageView = findViewById(R.id.selectedImageView);
+            selectedImageView.setVisibility(View.VISIBLE); // Make it visible
+            selectedImageView.setImageURI(imageUri); // Set the image URI
+        }
+    }
 
-    // FOR ADDS ON FUNCTION (CLASS) ONLY
+    // FOR ADD-ON FUNCTION (CLASS) ONLY
     private void addNewAddonField() {
         // Create a new horizontal LinearLayout to hold both the EditText and the Button
         LinearLayout addonLayout = new LinearLayout(this);
@@ -121,10 +152,7 @@ public class AddProductActivity extends AppCompatActivity {
         // Create a "Remove" button
         Button removeButton = new Button(this);
         removeButton.setText("Remove");
-
-        // Set background color to blue (you can use your own color resource)
         removeButton.setBackgroundColor(ContextCompat.getColor(this, R.color.blue));
-
         removeButton.setTextColor(ContextCompat.getColor(this, android.R.color.white));  // Make text white
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -142,8 +170,7 @@ public class AddProductActivity extends AppCompatActivity {
         addonContainer.addView(addonLayout);
     }
 
-    //FUMCTION NG ADD SIZE
-
+    // FUNCTION TO ADD SIZE
     private void addNewSizeField() {
         // Create a new horizontal LinearLayout to hold both the EditText and the Button
         LinearLayout sizeLayout = new LinearLayout(this);
@@ -170,10 +197,7 @@ public class AddProductActivity extends AppCompatActivity {
         // Create a "Remove" button
         Button removeButton = new Button(this);
         removeButton.setText("Remove");
-
-        // Set background color to blue (you can use your own color resource)
         removeButton.setBackgroundColor(ContextCompat.getColor(this, R.color.blue));
-
         removeButton.setTextColor(ContextCompat.getColor(this, android.R.color.white));  // Make text white
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -191,6 +215,7 @@ public class AddProductActivity extends AppCompatActivity {
         sizeContainer.addView(sizeLayout);
     }
 
+    // Method to save the product
     private void saveProduct() {
         currentUser = mAuth.getCurrentUser(); // Ensure this is updated
         if (currentUser != null) {
@@ -221,37 +246,69 @@ public class AddProductActivity extends AppCompatActivity {
             product.put("price", sellingPrice);
             product.put("description", description);
 
-            // Save to Firestore under the current user
-            db.collection("users").document(userId).collection("products")
-                    .add(product)
-                    .addOnSuccessListener(documentReference -> {
-                        // Clear all fields after successfully adding the product
-                        clearFields();
-                        Toast.makeText(AddProductActivity.this, "Product added!", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(AddProductActivity.this, "Failed to add product", Toast.LENGTH_SHORT).show();
-                    });
+            // Check if an image is selected and upload it
+            if (imageUri != null) {
+                uploadImage(userId, product);
+            } else {
+                // Save product without image if none is selected
+                saveProductToFirestore(userId, product);
+            }
         } else {
             Toast.makeText(AddProductActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Method to clear all input fields
-    private void clearFields() {
-        // Clear EditText fields
-        productName.setText("");
-        sellingPrice.setText("");
-        description.setText("");
+    // Method to upload image to Firebase Storage
+    private void uploadImage(String userId, Map<String, Object> product) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child("images/" + userId + "/" + System.currentTimeMillis() + ".jpg");
 
-        // Reset the RadioGroup selection
-        RadioGroup radioGroup = findViewById(R.id.radioGroup);
-        radioGroup.clearCheck();
+        // Upload the image
+        UploadTask uploadTask = storageRef.putFile(imageUri);
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            // Get the download URL
+            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                // Add the image URL to the product map
+                product.put("imageUrl", uri.toString());
 
-        // Optionally, clear all dynamic add-on and size fields
-        addonContainer.removeAllViews();
-        sizeContainer.removeAllViews();
+                // Display the uploaded image
+                ImageView selectedImageView = findViewById(R.id.selectedImageView);
+                selectedImageView.setVisibility(View.VISIBLE); // Make it visible
+                Glide.with(this).load(uri.toString()).into(selectedImageView); // Load the image using Glide or any image loading library
+
+                // Save product to Firestore
+                saveProductToFirestore(userId, product);
+            }).addOnFailureListener(e -> {
+                Toast.makeText(AddProductActivity.this, "Failed to get image URL", Toast.LENGTH_SHORT).show();
+            });
+        }).addOnFailureListener(e -> {
+            Toast.makeText(AddProductActivity.this, "Image upload failed", Toast.LENGTH_SHORT).show();
+        });
     }
 
 
+    // Method to save the product to Firestore
+    private void saveProductToFirestore(String userId, Map<String, Object> product) {
+        db.collection("users").document(userId).collection("products")
+                .add(product)
+                .addOnSuccessListener(documentReference -> {
+                    // Clear all fields after successfully adding the product
+                    clearFields();
+                    Toast.makeText(AddProductActivity.this, "Product added!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(AddProductActivity.this, "Failed to add product", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    // Method to clear all input fields
+    private void clearFields() {
+        ((EditText) findViewById(R.id.productName)).setText("");
+        ((EditText) findViewById(R.id.sellingPriceInput)).setText("");
+        ((EditText) findViewById(R.id.descriptionInput)).setText("");
+        addonContainer.removeAllViews(); // Clear add-ons
+        sizeContainer.removeAllViews(); // Clear sizes
+        imageUri = null; // Reset image URI
+        // You can reset any other fields or states as necessary
+    }
 }
