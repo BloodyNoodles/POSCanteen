@@ -32,6 +32,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name">
         </activity>
+        <activity android:name="CustomDialogue"/>
 
         <activity android:name=".profile" />
         <activity android:name=".transactionHistory" />
