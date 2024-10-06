@@ -8,14 +8,34 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import android.widget.Button; // Add this import
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
+
 import com.google.android.material.textview.MaterialTextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddProductActivity extends AppCompatActivity {
 
     private ImageButton menuBtn;
     private int addonCount = 0; // Initialize addonCount
     private LinearLayout addonContainer, sizeContainer; // Initialize addonContainer
-    private Button addAddonButton, addSizeButton;
+    private Button addAddonButton, addSizeButton, addButton, cancelButton;
+
+
+    private EditText productName, sellingPrice, description;
+
+
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +43,19 @@ public class AddProductActivity extends AppCompatActivity {
         // Setting the layout for this activity
         setContentView(R.layout.add_product);
 
+        // Initialize Firebase Auth and Firestore
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        // Get current user
+        currentUser = mAuth.getCurrentUser();
+
+        // Find the Add button
+        Button addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener(v -> saveProduct());
+
         // Initialize views after setting the content view
         menuBtn = findViewById(R.id.menubtn);
-        addonContainer = findViewById(R.id.addonContainer); // Make sure the addonContainer ID matches your XML
         addonContainer = findViewById(R.id.addonContainer); // Make sure the addonContainer ID matches your XML
         addAddonButton = findViewById(R.id.addAddonButton);
         addSizeButton = findViewById(R.id.addSizeButton); // Initialize addSizeButton
@@ -39,6 +69,12 @@ public class AddProductActivity extends AppCompatActivity {
         // Set the click listener for the addSizeButton to add new sizes dynamically
         addSizeButton.setOnClickListener(v -> addNewSizeField());
 
+        // Find the Cancel button and set its OnClickListener
+        cancelButton = findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(v -> {
+            // Finish the current activity and return to the previous one
+            finish(); // This will take you back to the previous activity
+        });
 
         // Add the fragment to the activity
         if (savedInstanceState == null) {
@@ -153,6 +189,68 @@ public class AddProductActivity extends AppCompatActivity {
 
         // Add the horizontal LinearLayout to the container
         sizeContainer.addView(sizeLayout);
+    }
+
+    private void saveProduct() {
+        currentUser = mAuth.getCurrentUser(); // Ensure this is updated
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            String enteredProductName = ((EditText) findViewById(R.id.productName)).getText().toString().trim();
+            String sellingPrice = ((EditText) findViewById(R.id.sellingPriceInput)).getText().toString().trim();
+            String description = ((EditText) findViewById(R.id.descriptionInput)).getText().toString().trim();
+
+            // Get selected category from RadioGroup
+            RadioGroup radioGroup = findViewById(R.id.radioGroup);
+            int selectedId = radioGroup.getCheckedRadioButtonId();
+            String category = "";
+            if (selectedId != -1) { // Check if any radio button is selected
+                RadioButton selectedRadioButton = findViewById(selectedId);
+                category = selectedRadioButton.getText().toString();
+            }
+
+            // Validate inputs before saving
+            if (enteredProductName.isEmpty() || sellingPrice.isEmpty() || description.isEmpty() || category.isEmpty()) {
+                Toast.makeText(AddProductActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Create a product object
+            Map<String, Object> product = new HashMap<>();
+            product.put("name", enteredProductName);
+            product.put("category", category);
+            product.put("price", sellingPrice);
+            product.put("description", description);
+
+            // Save to Firestore under the current user
+            db.collection("users").document(userId).collection("products")
+                    .add(product)
+                    .addOnSuccessListener(documentReference -> {
+                        // Clear all fields after successfully adding the product
+                        clearFields();
+                        Toast.makeText(AddProductActivity.this, "Product added!", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(AddProductActivity.this, "Failed to add product", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(AddProductActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Method to clear all input fields
+    private void clearFields() {
+        // Clear EditText fields
+        productName.setText("");
+        sellingPrice.setText("");
+        description.setText("");
+
+        // Reset the RadioGroup selection
+        RadioGroup radioGroup = findViewById(R.id.radioGroup);
+        radioGroup.clearCheck();
+
+        // Optionally, clear all dynamic add-on and size fields
+        addonContainer.removeAllViews();
+        sizeContainer.removeAllViews();
     }
 
 
