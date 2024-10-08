@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/productclick"
     android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="5dp"
     android:layout_margin="3dp"
     android:clickable="true"
-    android:layout_height="wrap_content">
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground"> <!-- Add background for click effect -->
 
     <TextView
         android:id="@+id/name1Btn"
@@ -19,11 +21,11 @@
         android:textStyle="bold"
         android:gravity="center" />
 
-    <ImageButton
-        android:id="@+id/item1Btn"
+    <ImageView
+        android:id="@+id/item1Image"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:contentDescription="Product image" />
+        android:contentDescription="Product image"
+        android:scaleType="centerCrop" />
 
 </LinearLayout>
-

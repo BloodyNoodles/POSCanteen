@@ -13,8 +13,6 @@
         android:layout_margin="5dp"
         android:gravity="center_horizontal">
 
-        <!-- Header Menu -->
-        <!-- Quantity Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,8 +30,7 @@
                 android:textColor="#FFFFFF"
                 android:background="@color/blue"
                 android:padding="8dp"
-                android:gravity="center"
-                />
+                android:gravity="center"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:text="1"
                     android:textSize="20sp"
-                    android:padding="16dp" />
+                    android:padding="16dp"/>
 
                 <Button
                     android:id="@+id/increase_quantity"
@@ -66,11 +63,10 @@
                     android:backgroundTint="@color/yellow"
                     android:text="+"
                     android:textSize="18sp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"/>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Adds On Section -->
         <TextView
             android:id="@+id/addons_label"
             android:layout_width="match_parent"
@@ -94,7 +90,6 @@
 
         </LinearLayout>
 
-        <!-- Sizes Section -->
         <TextView
             android:id="@+id/sizes_label"
             android:layout_width="match_parent"
@@ -114,18 +109,14 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:padding="8dp">
-
-
         </LinearLayout>
 
-        <!-- Buttons Section -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:padding="16dp"
-            >
+            android:padding="16dp">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_cancel"
@@ -135,7 +126,7 @@
                 android:text="CANCEL"
                 android:textColor="#ffffff"
                 android:layout_marginRight="55dp"
-                android:backgroundTint="@color/yellow" />
+                android:backgroundTint="@color/yellow"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_confirm"
@@ -146,10 +137,5 @@
                 android:textColor="#ffffff"
                 android:backgroundTint="@color/yellow"/>
         </LinearLayout>
-
-        <!-- Order and Checkout Section -->
-
-
     </LinearLayout>
-
 </ScrollView>
