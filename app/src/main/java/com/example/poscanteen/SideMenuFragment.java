@@ -55,26 +55,34 @@ public class SideMenuFragment extends Fragment {
 
         // Navigation without piling up fragments in the back stack
         addProduct.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AddProductActivity.class);
-            startActivity(intent);
+            if (!isCurrentActivity(AddProductActivity.class)) {
+                Intent intent = new Intent(getActivity(), AddProductActivity.class);
+                startActivity(intent);
+            }
         });
 
         transactionHistory.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), transactionHistory.class);
-            startActivity(intent);
+            if (!isCurrentActivity(transactionHistory.class)) {
+                Intent intent = new Intent(getActivity(), transactionHistory.class);
+                startActivity(intent);
+            }
         });
 
         home.setOnClickListener(v -> {
-            // Navigate without adding to the back stack (to prevent piling)
-            Intent intent = new Intent(getActivity(), home.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            if (!isCurrentActivity(home.class)) {
+                // Navigate without adding to the back stack (to prevent piling)
+                Intent intent = new Intent(getActivity(), home.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         });
 
         profile.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), com.example.poscanteen.profile.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            if (!isCurrentActivity(com.example.poscanteen.profile.class)) {
+                Intent intent = new Intent(getActivity(), com.example.poscanteen.profile.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         });
 
         return view;
@@ -96,6 +104,11 @@ public class SideMenuFragment extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+    }
+
+    // Method to check if the current activity is the same as the one intended to navigate to
+    private boolean isCurrentActivity(Class<?> activityClass) {
+        return getActivity() != null && getActivity().getClass().equals(activityClass);
     }
 
     // Method to toggle the side menu's visibility
