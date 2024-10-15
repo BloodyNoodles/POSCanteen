@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:id="@+id/transactionId"
     tools:context=".transactionHistory">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="53dp"
         android:background="#00128E"
-        android:orientation="horizontal">
+        android:layout_alignParentTop="true">
 
         <ImageButton
             android:id="@+id/menubtn"
@@ -26,21 +25,23 @@
             app:tint="@color/white" />
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Transaction History"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:layout_weight="1"
-            android:layout_marginEnd="15dp" />
-    </LinearLayout>
 
-    <LinearLayout
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/column"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:background="#00128E"
+        android:layout_below="@id/header"
         android:gravity="center_vertical">
 
         <TextView
@@ -51,20 +52,24 @@
             android:textColor="@color/white"
             android:textSize="15sp"
             android:layout_marginStart="12dp"
-            android:layout_marginEnd="15dp" />
-    </LinearLayout>
+            android:layout_marginEnd="15dp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_below="@id/column">
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recyclerViewHistory" />
+
     </ScrollView>
-
-
-
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/sideMenus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start" />
+</RelativeLayout>

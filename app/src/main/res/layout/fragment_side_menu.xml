@@ -149,11 +149,11 @@
             </RelativeLayout>
 
             <!-- Inventory Option -->
-            <LinearLayout
+            <RelativeLayout
 
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:orientation="horizontal"
+
                 android:id="@+id/transactionId"
                 >
 
@@ -163,6 +163,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:src="@drawable/inventory"
+                    android:id="@+id/imagehistory"
                     app:tint="@color/white" />
 
                 <TextView
@@ -172,9 +173,11 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:text="Transaction History"
+                    android:layout_toEndOf="@id/imagehistory"
+                    android:layout_centerVertical="true"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
-            </LinearLayout>
+            </RelativeLayout>
 
             <!-- Logout Button -->
             <RelativeLayout

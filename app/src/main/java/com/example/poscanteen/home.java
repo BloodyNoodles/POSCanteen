@@ -43,7 +43,7 @@ public class home extends AppCompatActivity {
         AppCompatButton drinkMenuButton = findViewById(R.id.drinkMenuButton);
         AppCompatButton snackMenuButton = findViewById(R.id.snackMenuButton);
         AppCompatButton essentialsMenuButton = findViewById(R.id.essentialsMenuButton);
-        TextView currentOrderText = findViewById(R.id.currentOrderText); // Adjusted for proper ID if needed
+
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
