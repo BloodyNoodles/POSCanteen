@@ -2,12 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/productclick"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="center_horizontal"
+
     android:padding="5dp"
-    android:layout_margin="3dp"
+
+    android:layout_marginTop="10dp"
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground"> <!-- Add background for click effect -->

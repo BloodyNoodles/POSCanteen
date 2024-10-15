@@ -141,6 +141,7 @@ public class AddProductActivity extends AppCompatActivity {
         EditText newAddonField = new EditText(this);
         newAddonField.setHint("Enter an add-on here");
         newAddonField.setInputType(InputType.TYPE_CLASS_TEXT);
+        newAddonField.setPadding(50, 16, 16, 16);
         LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -177,6 +178,7 @@ public class AddProductActivity extends AppCompatActivity {
         EditText newSizeField = new EditText(this);
         newSizeField.setHint("Enter size");
         newSizeField.setInputType(InputType.TYPE_CLASS_TEXT);
+        newSizeField.setPadding(50, 16, 16, 16);
         LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,

@@ -2,6 +2,8 @@ package com.example.poscanteen;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,9 +49,15 @@ public class home extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
-        // Initialize RecyclerView
-        recyclerView = findViewById(R.id.recyclerView); // Ensure this ID matches in your XML
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Initialize RecyclerView after setContentView
+        recyclerView = findViewById(R.id.recyclerView);
+        if (recyclerView == null) {
+            throw new RuntimeException("RecyclerView is null. Ensure the ID matches the layout.");
+        }
+
+        // Set the layout manager with the dynamic span count
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false));
+
 
         // Prepare the product list and adapter
         productList = new ArrayList<>();
@@ -109,7 +118,7 @@ public class home extends AppCompatActivity {
                                 Product product = document.toObject(Product.class);
                                 productList.add(product);
                             }
-                            productAdapter.notifyDataSetChanged(); // Notify the adapter of data changes
+                            runOnUiThread(() -> productAdapter.notifyDataSetChanged()); // Notify the adapter of data changes on the main thread
                         } else {
                             Toast.makeText(this, "Error fetching products", Toast.LENGTH_SHORT).show();
                         }

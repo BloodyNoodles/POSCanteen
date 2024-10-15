@@ -120,7 +120,10 @@
                     android:layout_gravity="left"
                     android:layout_marginTop="3dp"
                     android:background="@drawable/border_product"
-                    android:gravity="center" />
+
+                    android:paddingStart="20sp"
+                    android:hint="Product Name"
+                    />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -206,10 +209,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="start"> <!-- Align button to the right -->
+                        android:gravity="center_horizontal"> <!-- Align button to the right -->
 
                         <!-- Button to add new Adds On -->
                         <Button
+                            android:layout_gravity="center_horizontal"
                             android:id="@+id/addAddonButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -226,7 +230,9 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginTop="15dp"
-                        android:layout_marginBottom="10dp">
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_horizontal"
+                        >
 
                         <!-- Title: Sizes -->
                         <TextView
@@ -236,7 +242,9 @@
                             android:layout_marginLeft="5dp"
                             android:textSize="16sp"
                             android:textColor="#000000"
-                            android:layout_marginTop="4dp" />
+                            android:layout_marginTop="4dp"
+                            android:layout_gravity="start"
+                            />
 
                         <!-- Container to add dynamic size EditText inputs -->
                         <LinearLayout
@@ -244,7 +252,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="10dp"
+                            />
 
                         <!-- Button to add new Sizes -->
                         <Button
@@ -272,6 +281,7 @@
                 android:layout_marginTop="4dp" />
 
             <EditText
+                android:paddingStart="20sp"
                 android:id="@+id/descriptionInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -294,13 +304,14 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:paddingStart="20sp"
                 android:id="@+id/sellingPriceInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:background="@drawable/sell_border"
                 android:layout_marginTop="3dp"
-                android:hint="  ₱"
+                android:hint="₱"
                 android:inputType="numberDecimal" />
 
             <!-- Buttons for Add and Cancel -->
