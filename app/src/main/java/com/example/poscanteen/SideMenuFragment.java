@@ -27,7 +27,7 @@ public class SideMenuFragment extends Fragment {
     private boolean isMenuVisible = false;
     private LinearLayout sideMenu;
     FrameLayout sideMenuLayout;
-    LinearLayout home;
+    LinearLayout home, transactionId;
     RelativeLayout profile, addProduct;
     private View blockingView;  // The view to block clicks behind the menu
     private FirebaseAuth mAuth;  // Declare FirebaseAuth
@@ -46,6 +46,7 @@ public class SideMenuFragment extends Fragment {
         ImageButton sideBtn = view.findViewById(R.id.sideBtn);
         addProduct = view.findViewById(R.id.addProduct);
         home = view.findViewById(R.id.home);
+        transactionId = view.findViewById(R.id.transactionId);
         profile = view.findViewById(R.id.profile);
         blockingView = view.findViewById(R.id.blockingView);  // Initialize blockingView
 
@@ -74,6 +75,14 @@ public class SideMenuFragment extends Fragment {
         });
 
         profile.setOnClickListener(v -> {
+            if (!isCurrentActivity(com.example.poscanteen.profile.class)) {
+                Intent intent = new Intent(getActivity(), com.example.poscanteen.profile.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
+        transactionId.setOnClickListener(v -> {
             if (!isCurrentActivity(com.example.poscanteen.profile.class)) {
                 Intent intent = new Intent(getActivity(), com.example.poscanteen.profile.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
