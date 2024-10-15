@@ -324,13 +324,14 @@
 
                 <Button
                     android:id="@+id/cancelButton"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="45dp"
-                    android:layout_weight="1"
+                  android:paddingHorizontal="30sp"
+
                     android:backgroundTint="#001283"
                     android:text="Cancel"
                     android:textSize="17sp"
-                    android:layout_marginLeft="60dp"
+
                     android:textColor="@android:color/white" />
 
                 <Space
@@ -339,12 +340,11 @@
 
                 <Button
                     android:id="@+id/addButton"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="45dp"
-                    android:layout_weight="1"
+                    android:paddingHorizontal="30sp"
                     android:text="Add"
                     android:textSize="17sp"
-                    android:layout_marginRight="60dp"
                     android:backgroundTint="#001283"
                     android:textColor="@android:color/white" />
 
