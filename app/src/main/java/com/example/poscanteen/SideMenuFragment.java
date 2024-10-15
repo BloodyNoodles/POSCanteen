@@ -12,14 +12,15 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
+
 import androidx.activity.OnBackPressedCallback;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SideMenuFragment extends Fragment {
 
@@ -27,14 +28,17 @@ public class SideMenuFragment extends Fragment {
     private LinearLayout sideMenu;
     FrameLayout sideMenuLayout;
     LinearLayout home;
-    MaterialTextView transactionHistory;
     RelativeLayout profile, addProduct;
     private View blockingView;  // The view to block clicks behind the menu
+    private FirebaseAuth mAuth;  // Declare FirebaseAuth
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_side_menu, container, false);
+
+        // Initialize FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
 
         // Initialize UI components
         sideMenu = view.findViewById(R.id.sideMenu);
@@ -42,7 +46,6 @@ public class SideMenuFragment extends Fragment {
         ImageButton sideBtn = view.findViewById(R.id.sideBtn);
         addProduct = view.findViewById(R.id.addProduct);
         home = view.findViewById(R.id.home);
-        transactionHistory = view.findViewById(R.id.transactionId);
         profile = view.findViewById(R.id.profile);
         blockingView = view.findViewById(R.id.blockingView);  // Initialize blockingView
 
@@ -61,13 +64,6 @@ public class SideMenuFragment extends Fragment {
             }
         });
 
-        transactionHistory.setOnClickListener(v -> {
-            if (!isCurrentActivity(transactionHistory.class)) {
-                Intent intent = new Intent(getActivity(), transactionHistory.class);
-                startActivity(intent);
-            }
-        });
-
         home.setOnClickListener(v -> {
             if (!isCurrentActivity(home.class)) {
                 // Navigate without adding to the back stack (to prevent piling)
@@ -82,6 +78,21 @@ public class SideMenuFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), com.example.poscanteen.profile.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+            }
+        });
+
+        // Logout button
+        View logoutButton = view.findViewById(R.id.logoutBtn);
+        logoutButton.setOnClickListener(v -> {
+            if (mAuth != null) {
+                mAuth.signOut();  // Firebase sign out
+                Toast.makeText(getContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), MainActivity.class);  // Redirect to LoginActivity
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Clear back stack
+                startActivity(intent);
+                getActivity().finish();  // Close the current activity
+            } else {
+                Toast.makeText(getContext(), "FirebaseAuth is null", Toast.LENGTH_SHORT).show();
             }
         });
 
