@@ -84,7 +84,7 @@ public class SideMenuFragment extends Fragment {
 
         transactionId.setOnClickListener(v -> {
             if (!isCurrentActivity(com.example.poscanteen.profile.class)) {
-                Intent intent = new Intent(getActivity(), com.example.poscanteen.profile.class);
+                Intent intent = new Intent(getActivity(), com.example.poscanteen.transactionHistory.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
