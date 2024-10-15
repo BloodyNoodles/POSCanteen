@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#472A2A2A"
-    android:padding="16dp">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fbffff"
         android:orientation="vertical"
-        android:layout_margin="5dp"
+
         android:gravity="center_horizontal">
 
         <LinearLayout
@@ -122,7 +122,7 @@
                 android:id="@+id/button_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="CANCEL"
                 android:textColor="#ffffff"
                 android:layout_marginRight="55dp"
@@ -132,7 +132,7 @@
                 android:id="@+id/button_confirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="CONFIRM"
                 android:textColor="#ffffff"
                 android:backgroundTint="@color/yellow"/>

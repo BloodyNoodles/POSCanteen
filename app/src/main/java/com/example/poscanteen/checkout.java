@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
@@ -61,5 +59,11 @@ public class checkout extends AppCompatActivity {
                 fragment.toggleSideMenu();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Call the super method to ensure proper behavior
+        super.onBackPressed();
     }
 }
