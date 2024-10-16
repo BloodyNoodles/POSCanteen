@@ -190,7 +190,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Adds on"
+                        android:text="Add-ons"
                         android:layout_marginLeft="5dp"
                         android:textSize="16sp"
                         android:textColor="#000000"
@@ -217,7 +217,7 @@
                             android:id="@+id/addAddonButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="+ Add Adds On"
+                            android:text="+ Add Add-ons"
                             android:textSize="12sp"
                             android:textColor="#FFFFFF"
                             android:backgroundTint="@color/blue"
