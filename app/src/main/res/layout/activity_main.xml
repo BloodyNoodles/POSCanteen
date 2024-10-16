@@ -154,7 +154,7 @@
                 android:text="or sign up with"
                 android:textColor="#616161"
                 android:textSize="14sp"
-                android:background="#FCF5FD"
+                android:background="#FFFFFF"
                 android:padding="2dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
