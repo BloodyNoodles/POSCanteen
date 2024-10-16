@@ -2,6 +2,7 @@ package com.example.poscanteen;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -39,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.loginBtn);
         register = findViewById(R.id.regtxt);
 
-        productClickLayout = findViewById(R.id.productclick); // Make sure this ID matches in your layout file
+        View productView = getLayoutInflater().inflate(R.layout.recycler_newproduct, null);
+        productClickLayout = productView.findViewById(R.id.productclick);
+// Make sure this ID matches in your layout file
 
         login.setOnClickListener(v -> {
             String email = username.getText().toString().trim();
