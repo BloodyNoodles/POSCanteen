@@ -76,8 +76,13 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
             });
+
+
         }
     }
+
+
+
 
     private boolean validateInputs(String email, String password) {
         if (email.isEmpty()) {
@@ -98,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null && user.isEmailVerified()) {
                             // Email is verified, proceed to the main activity
-                            startActivity(new Intent(MainActivity.this, MainActivity.class));
+                            startActivity(new Intent(MainActivity.this, home.class));
                             finish();
                         } else {
                             // Email not verified, prompt the user to verify their email

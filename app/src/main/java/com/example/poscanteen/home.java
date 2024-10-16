@@ -44,30 +44,25 @@ public class home extends AppCompatActivity {
         AppCompatButton snackMenuButton = findViewById(R.id.snackMenuButton);
         AppCompatButton essentialsMenuButton = findViewById(R.id.essentialsMenuButton);
 
-
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
-        // Initialize RecyclerView after setContentView
+        // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         if (recyclerView == null) {
             throw new RuntimeException("RecyclerView is null. Ensure the ID matches the layout.");
         }
-
-        // Set the layout manager with the dynamic span count
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false));
-
 
         // Prepare the product list and adapter
         productList = new ArrayList<>();
         productAdapter = new ProductAdapter(productList, this); // Use a request code of your choice
-
         recyclerView.setAdapter(productAdapter);
 
-        // Fetch products from Firestore
+        // Fetch all products initially if the user is logged in
         if (currentUser != null) {
-            fetchProducts();
+            fetchProducts(null); // Show all categories by default
         } else {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
         }
@@ -81,7 +76,7 @@ public class home extends AppCompatActivity {
 
         // Checkout button listener
         checkout.setOnClickListener(v -> {
-            Intent intent = new Intent(home.this, checkout.class); // Make sure CheckoutActivity is defined
+            Intent intent = new Intent(home.this, checkout.class); // Ensure checkout activity exists
             startActivity(intent);
         });
 
@@ -94,19 +89,14 @@ public class home extends AppCompatActivity {
         });
 
         // Set click listeners for menu category buttons
-        allCategoriesButton.setOnClickListener(v -> openCustomDialogue("All Categories"));
-        drinkMenuButton.setOnClickListener(v -> openCustomDialogue("Drink Menu"));
-        snackMenuButton.setOnClickListener(v -> openCustomDialogue("Snack Menu"));
-        essentialsMenuButton.setOnClickListener(v -> openCustomDialogue("Essentials Menu"));
+        allCategoriesButton.setOnClickListener(v -> fetchProducts(null)); // Show all products
+        drinkMenuButton.setOnClickListener(v -> fetchProducts("Drinks")); // Show drinks only
+        snackMenuButton.setOnClickListener(v -> fetchProducts("Snacks")); // Show snacks only
+        essentialsMenuButton.setOnClickListener(v -> fetchProducts("Essentials")); // Show essentials only
     }
 
-    private void openCustomDialogue(String category) {
-        Intent intent = new Intent(home.this, CustomDialogue.class);
-        intent.putExtra("CATEGORY_NAME", category); // Pass the category name
-        startActivity(intent);
-    }
-
-    private void fetchProducts() {
+    // Fetch products from Firestore, with optional filtering by category
+    private void fetchProducts(String category) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if (currentUser != null) {
             db.collection("users").document(currentUser.getUid()).collection("products")
@@ -116,15 +106,18 @@ public class home extends AppCompatActivity {
                             productList.clear(); // Clear the list before adding new products
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Product product = document.toObject(Product.class);
-                                productList.add(product);
+
+                                // Filter products by category if specified
+                                if (category == null || product.getCategory().equalsIgnoreCase(category)) {
+                                    productList.add(product);
+                                }
                             }
-                            runOnUiThread(() -> productAdapter.notifyDataSetChanged()); // Notify the adapter of data changes on the main thread
+                            // Notify the adapter of data changes on the main thread
+                            runOnUiThread(() -> productAdapter.notifyDataSetChanged());
                         } else {
                             Toast.makeText(this, "Error fetching products", Toast.LENGTH_SHORT).show();
                         }
                     });
         }
     }
-
-
 }
