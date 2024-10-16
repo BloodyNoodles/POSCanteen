@@ -71,41 +71,36 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="10dp" />
 
-                <!-- Username Input -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Username"
-                    android:layout_marginTop="20dp"
-                    android:textSize="16sp" />
-
-                <EditText
-                    android:layout_marginTop="5dp"
-                    android:id="@+id/usernameEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:background="@drawable/field_container"
-                    android:paddingStart="10dp"
-                    android:hint="Username"
-                    android:textSize="16sp" />
 
                 <!-- Email Input -->
                 <TextView
+                    android:id="@+id/emailTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Email"
                     android:layout_marginTop="20dp"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:inputType="none"
+                    />
+
 
                 <EditText
-                    android:layout_marginTop="5dp"
                     android:id="@+id/emailEdit"
+                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
                     android:background="@drawable/field_container"
                     android:paddingStart="10dp"
                     android:hint="Email"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:cursorVisible="false"
+                    />
+
 
                 <!-- Current Password Input -->
                 <TextView

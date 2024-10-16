@@ -21,7 +21,7 @@ public class CustomDialogue extends Dialog {
     private Context context;
     private TextView quantityValue;
     private int quantity = 1; // Default quantity
-
+    private boolean toastShown = false;
     // Update the constructor to accept productId
     public CustomDialogue(@NonNull Context context) {
         super(context);
@@ -46,13 +46,20 @@ public class CustomDialogue extends Dialog {
 
         // Set click listeners for quantity buttons
         decreaseQuantity.setOnClickListener(v -> {
-            if (quantity > 1) { // Prevent quantity from going below 1
+            if (quantity > 1) {
+                // Decrease quantity and update display
                 quantity--;
                 quantityValue.setText(String.valueOf(quantity));
-            } else {
+                // Reset the toast flag because quantity is now > 1
+                toastShown = false;
+            } else if (!toastShown) {
+                // Show the toast only if it hasn't been shown already
                 Toast.makeText(context, "Quantity cannot be less than 1", Toast.LENGTH_SHORT).show();
+                // Set the flag to true to prevent future toasts
+                toastShown = true;
             }
         });
+
 
         increaseQuantity.setOnClickListener(v -> {
             quantity++;
