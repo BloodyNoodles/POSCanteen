@@ -57,38 +57,51 @@ public class SideMenuFragment extends Fragment {
         // Toggle side menu visibility on sideBtn click
         sideBtn.setOnClickListener(v -> toggleSideMenu());
 
-        // Navigation without piling up fragments in the back stack
-        addProduct.setOnClickListener(v -> {
-            if (!isCurrentActivity(AddProductActivity.class)) {
-                Intent intent = new Intent(getActivity(), AddProductActivity.class);
-                startActivity(intent);
-            }
-        });
 
         home.setOnClickListener(v -> {
-            if (!isCurrentActivity(home.class)) {
-                // Navigate without adding to the back stack (to prevent piling)
+            if (isCurrentActivity(home.class)) {
+                toggleSideMenu();  // Close side menu if already on Home
+            } else {
+                // Navigate to Home without adding to the back stack (to prevent piling)
                 Intent intent = new Intent(getActivity(), home.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         });
 
+// Profile button click listener
         profile.setOnClickListener(v -> {
-            if (!isCurrentActivity(com.example.poscanteen.profile.class)) {
+            if (isCurrentActivity(com.example.poscanteen.profile.class)) {
+                toggleSideMenu();  // Close side menu if already on Profile
+            } else {
                 Intent intent = new Intent(getActivity(), com.example.poscanteen.profile.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         });
 
+// Add Product button click listener
+        addProduct.setOnClickListener(v -> {
+            if (isCurrentActivity(AddProductActivity.class)) {
+                toggleSideMenu();  // Close side menu if already on Add Product
+            } else {
+                Intent intent = new Intent(getActivity(), AddProductActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);  // Same behavior as others
+                startActivity(intent);
+            }
+        });
+
+// Transaction History button click listener
         transactionId.setOnClickListener(v -> {
-            if (!isCurrentActivity(com.example.poscanteen.transactionHistory.class)) {
+            if (isCurrentActivity(com.example.poscanteen.transactionHistory.class)) {
+                toggleSideMenu();  // Close side menu if already on Transaction History
+            } else {
                 Intent intent = new Intent(getActivity(), com.example.poscanteen.transactionHistory.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         });
+
 
         // Logout button
         View logoutButton = view.findViewById(R.id.logoutBtn);
