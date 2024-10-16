@@ -93,15 +93,24 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, home.class);
-                        startActivity(intent);
-                        finish();
+                        if (user != null && user.isEmailVerified()) {
+                            // Email is verified, proceed to the main activity
+                            startActivity(new Intent(MainActivity.this, MainActivity.class));
+                            finish();
+                        } else {
+                            // Email not verified, prompt the user to verify their email
+                            Toast.makeText(MainActivity.this,
+                                    "Please verify your email before logging in.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(MainActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        // If sign in fails, display a message to the user
+                        Toast.makeText(MainActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
