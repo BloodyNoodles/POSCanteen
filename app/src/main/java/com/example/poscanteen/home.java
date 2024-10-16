@@ -95,6 +95,13 @@ public class home extends AppCompatActivity {
         essentialsMenuButton.setOnClickListener(v -> fetchProducts("Essentials")); // Show essentials only
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Fetch data from Firebase when the activity starts or resumes
+        fetchProducts(null);
+    }
+
     // Fetch products from Firestore, with optional filtering by category
     private void fetchProducts(String category) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -119,5 +126,6 @@ public class home extends AppCompatActivity {
                         }
                     });
         }
+
     }
 }

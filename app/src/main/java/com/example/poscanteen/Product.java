@@ -16,10 +16,10 @@ public class Product {
     public Product() {}
 
     // Parameterized constructor
-    public Product(String id, String name, String imageUrl, String category,
+    public Product(String id, String productName, String imageUrl, String category,
                    String description, String price, List<String> addOns, List<String> sizes) {
         this.id = id;
-        this.name = name;
+        this.name = productName;
         this.imageUrl = imageUrl;
         this.category = category;
         this.description = description;

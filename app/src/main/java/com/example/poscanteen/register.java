@@ -42,13 +42,13 @@ public class register extends AppCompatActivity {
         registerButton = findViewById(R.id.registerBtn);
         loginText = findViewById(R.id.logintxt);
 
-        // On click, redirect to login page
+        // Redirect to login page on click
         loginText.setOnClickListener(e -> {
             Intent intent = new Intent(register.this, MainActivity.class);
             startActivity(intent);
         });
 
-        // On register button click
+        // Register button click listener
         registerButton.setOnClickListener(v -> {
             String email = emailInput.getText().toString().trim();
             String password = passwordInput.getText().toString().trim();
@@ -60,20 +60,8 @@ public class register extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        // Customize the behavior on back press if you want to navigate to MainActivity
-        super.onBackPressed();
-        Intent intent = new Intent(register.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish(); // Finish the register activity to remove it from the back stack
-    }
-
-
     // Method to validate user inputs
     private boolean validateInputs(String email, String password, String confirmPassword) {
-
         if (email.isEmpty()) {
             emailInput.setError("Email is required");
             return false;
@@ -89,7 +77,7 @@ public class register extends AppCompatActivity {
         return true;
     }
 
-    // Method to register user and insert data into Firestore
+    // Method to create account and store user data
     private void createAccount(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
@@ -98,62 +86,90 @@ public class register extends AppCompatActivity {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
                             sendVerificationEmail(user);
+
+                            // Store user data in Firestore
+                            storeUserData(user.getUid(), email, password);
                         }
                     } else {
-                        // If sign in fails, display a message to the user
+                        // If registration fails, display a message
                         Toast.makeText(register.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
+    // Method to send email verification
     private void sendVerificationEmail(FirebaseUser user) {
         user.sendEmailVerification()
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Email sent successfully, notify the user
+                        // Notify user that email is sent
                         Toast.makeText(register.this,
                                 "Verification email sent to " + user.getEmail(),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        // If email fails to send, handle the error
+                        // Handle error if email fails to send
                         Toast.makeText(register.this,
                                 "Failed to send verification email.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
+    // Method to store user data in Firestore
+    private void storeUserData(String userId, String email, String password) {
+        // Create a map to store user data
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", email);
+        userData.put("password", password);
+
+        // Store data in Firestore under "users" collection
+        db.collection("users").document(userId)
+                .set(userData)
+                .addOnSuccessListener(aVoid -> {
+                    // User data stored successfully, navigate to main activity
+                    Toast.makeText(register.this, "User registered successfully", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(register.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure in storing data
+                    Toast.makeText(register.this, "Error storing user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+    // Optional: Login method for future use
     private void loginUser(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null && user.isEmailVerified()) {
-                            // Email is verified, proceed to the main activity
+                            // Email verified, proceed to main activity
                             startActivity(new Intent(register.this, MainActivity.class));
                             finish();
                         } else {
-                            // Email not verified, prompt the user to verify their email
+                            // Email not verified, prompt user
                             Toast.makeText(register.this,
                                     "Please verify your email before logging in.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        // If sign in fails, display a message to the user
+                        // If login fails, show error
                         Toast.makeText(register.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-
+    // Listener to check user's email verification status
     FirebaseAuth.AuthStateListener authListener = firebaseAuth -> {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) {
             user.reload().addOnCompleteListener(task -> {
                 if (user.isEmailVerified()) {
-                    // The user's email is verified, now you can allow login
-                    // or redirect them to the main app screen
+                    // Email verified, allow login or navigate to main app screen
                 }
             });
         }
@@ -173,6 +189,7 @@ public class register extends AppCompatActivity {
         }
     }
 
+    // Optional: Resend email verification
     private void resendVerificationEmail(FirebaseUser user) {
         user.sendEmailVerification().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -185,32 +202,5 @@ public class register extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-    }
-
-
-    // Method to store user data in Firestore
-    private void storeUserData(String userId, String email, String password) {
-        // Create a map for user data
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("email", email);
-        userData.put("password", password);
-
-        // Store data in Firestore
-        db.collection("users").document(userId)
-                .set(userData)
-                .addOnSuccessListener(aVoid -> {
-                    // User data stored successfully, navigate to another activity or show a success message
-                    Toast.makeText(register.this, "User registered successfully", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(register.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    // Failed to store user data
-                    Toast.makeText(register.this, "Error storing user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
     }
 }
