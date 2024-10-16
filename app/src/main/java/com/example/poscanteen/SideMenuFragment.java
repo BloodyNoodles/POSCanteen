@@ -116,10 +116,23 @@ public class SideMenuFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (isMenuVisible) {
-                    toggleSideMenu();  // Close the side menu if it is open
+                // Define the activities where side menu can be toggled
+                if (isCurrentActivity(home.class) || isCurrentActivity(profile.class) || isCurrentActivity(transactionHistory.class) || isCurrentActivity(AddProductActivity.class)) {
+                    // If in one of the allowed activities, toggle the side menu
+                    if (isMenuVisible) {
+                        toggleSideMenu();  // Close the side menu if it is open
+                    } else {
+                        toggleSideMenu();  // Open the side menu if it is closed
+                    }
+                } else if (isCurrentActivity(checkout.class)) {
+                    // If in the CheckoutActivity, go back to the home screen
+                    Intent intent = new Intent(getActivity(), home.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    // No need to call finish(); let Android manage the activity lifecycle
                 } else {
-                    toggleSideMenu();  // Open the side menu if it is closed
+                    // Default back behavior for all other activities
+                    requireActivity().onBackPressed();
                 }
             }
         };
