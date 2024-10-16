@@ -20,7 +20,7 @@ import java.util.Map;
 public class register extends AppCompatActivity {
 
     private TextView loginText;
-    private EditText usernameInput, emailInput, passwordInput, confirmPasswordInput;
+    private EditText emailInput, passwordInput, confirmPasswordInput;
     private Button registerButton;
 
     private FirebaseAuth mAuth;
@@ -36,7 +36,6 @@ public class register extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         // Initialize UI elements
-        usernameInput = findViewById(R.id.usernameInput);
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
         confirmPasswordInput = findViewById(R.id.confirmPasswordInput);
@@ -51,23 +50,19 @@ public class register extends AppCompatActivity {
 
         // On register button click
         registerButton.setOnClickListener(v -> {
-            String username = usernameInput.getText().toString().trim();
             String email = emailInput.getText().toString().trim();
             String password = passwordInput.getText().toString().trim();
             String confirmPassword = confirmPasswordInput.getText().toString().trim();
 
-            if (validateInputs(username, email, password, confirmPassword)) {
-                registerUser(username, email, password);
+            if (validateInputs(email, password, confirmPassword)) {
+                registerUser(email, password);
             }
         });
     }
 
     // Method to validate user inputs
-    private boolean validateInputs(String username, String email, String password, String confirmPassword) {
-        if (username.isEmpty()) {
-            usernameInput.setError("Username is required");
-            return false;
-        }
+    private boolean validateInputs(String email, String password, String confirmPassword) {
+
         if (email.isEmpty()) {
             emailInput.setError("Email is required");
             return false;
@@ -84,14 +79,14 @@ public class register extends AppCompatActivity {
     }
 
     // Method to register user and insert data into Firestore
-    private void registerUser(String username, String email, String password) {
+    private void registerUser(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Registration successful, store the email and password in Firestore
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            storeUserData(user.getUid(), email, password); // Change here
+                            storeUserData(user.getUid(), email, password);
                         }
                     } else {
                         // Registration failed, show an error message
@@ -101,7 +96,7 @@ public class register extends AppCompatActivity {
     }
 
     // Method to store user data in Firestore
-    private void storeUserData(String userId, String email, String password) { // Change here
+    private void storeUserData(String userId, String email, String password) {
         // Create a map for user data
         Map<String, Object> userData = new HashMap<>();
         userData.put("email", email);
