@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,10 +80,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+        // Set up a custom back press behavior using OnBackPressedDispatcher
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Your custom back press logic
+                finishAffinity(); // Close the app by finishing all activities in the task
+            }
+        });
+
     }
-
-
-
 
     private boolean validateInputs(String email, String password) {
         if (email.isEmpty()) {

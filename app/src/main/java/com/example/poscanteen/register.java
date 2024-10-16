@@ -60,6 +60,17 @@ public class register extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        // Customize the behavior on back press if you want to navigate to MainActivity
+        super.onBackPressed();
+        Intent intent = new Intent(register.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // Finish the register activity to remove it from the back stack
+    }
+
+
     // Method to validate user inputs
     private boolean validateInputs(String email, String password, String confirmPassword) {
 
@@ -174,6 +185,9 @@ public class register extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
     }
 
 
