@@ -45,8 +45,11 @@ public class register extends AppCompatActivity {
         // Redirect to login page on click
         loginText.setOnClickListener(e -> {
             Intent intent = new Intent(register.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK); // This clears the back stack
             startActivity(intent);
+            finish(); // Finish the current activity
         });
+
 
         // Register button click listener
         registerButton.setOnClickListener(v -> {
