@@ -1,5 +1,4 @@
 package com.example.poscanteen;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,22 +7,22 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import android.util.Log;
 import android.widget.ImageButton;
+import com.facebook.FacebookCallback;
+import com.facebook.login.LoginResult;
+import com.facebook.FacebookException;
+
+import java.util.Arrays;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppEventsLogger.activateApp(getApplication());
         setContentView(R.layout.activity_main);
 
         // Firebase and Firestore instances
@@ -47,27 +47,31 @@ public class MainActivity extends AppCompatActivity {
 
         // Facebook Login setup
         callbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = findViewById(R.id.login_button1);
-        loginButton.setReadPermissions("email", "public_profile");
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        startActivity(new Intent(MainActivity.this,home.class));
+                        finish();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                    }
+                });
 
         ImageButton btnFacebookLogin = findViewById(R.id.btn_facebook_login);
-        btnFacebookLogin.setOnClickListener(v -> loginButton.performClick());
 
-        // Facebook login callback
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        btnFacebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d("FacebookLogin", "Login successful: " + loginResult.getAccessToken().getUserId());
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d("FacebookLogin", "Login canceled.");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.e("FacebookLogin", "Login error: " + error.getMessage());
+            public void onClick(View view) {
+                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("public_profile"));
             }
         });
 
@@ -109,13 +113,13 @@ public class MainActivity extends AppCompatActivity {
                 });
             });
         }
+
     }
 
-    // Consolidated onActivityResult method
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data); // Called first
+        super.onActivityResult(requestCode, resultCode, data); // Called second
 
         if (requestCode == REQUEST_CODE_DIALOGUE && resultCode == RESULT_OK) {
             if (data != null) {
@@ -124,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
     // Validation and login methods
     private boolean validateInputs(String email, String password) {
@@ -154,4 +159,5 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }

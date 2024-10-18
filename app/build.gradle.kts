@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.play.services.auth)
     implementation(libs.facebook.login)
+    implementation("com.facebook.android:facebook-android-sdk:latest.release")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
