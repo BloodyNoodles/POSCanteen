@@ -195,10 +195,7 @@
                 android:src="@drawable/facebook"
                 android:scaleType="fitCenter"
                 android:background="@android:color/transparent" />
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/login_button1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+
 
             <ImageButton
                 android:layout_width="48dp"
@@ -207,6 +204,7 @@
                 android:src="@drawable/google"
                 android:scaleType="fitCenter"
                 android:background="@android:color/transparent" />
+
         </LinearLayout>
 
         <!-- Register Option -->
