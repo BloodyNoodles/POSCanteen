@@ -2,9 +2,11 @@ package com.example.poscanteen;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -128,10 +130,35 @@ public class AddProductActivity extends AppCompatActivity {
         addonPriceInput.setLayoutParams(new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
 
+        // Add delete button
+        ImageButton deleteButton = new ImageButton(this);
+        deleteButton.setImageResource(R.drawable.delete);
+        // Remove the default background to prevent the gray background
+        deleteButton.setBackground(null);
+
+        // Set a larger size for better visibility (try 32dp instead of 24dp)
+        int sizeInDp = 50;  // Adjust based on desired size
+        int sizeInPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, sizeInDp, getResources().getDisplayMetrics());
+
+        // Set layout parameters for the button
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(sizeInPx, sizeInPx);
+        params.setMargins(8, 8, 8, 8); // Adding some margin for better visibility
+        deleteButton.setLayoutParams(params);
+
+        // Set the scale type to ensure the image fits well
+        deleteButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+        // Handle delete action
+        deleteButton.setOnClickListener(v -> addonContainer.removeView(addonLayout));
+
         addonLayout.addView(addonNameInput);
         addonLayout.addView(addonPriceInput);
+        addonLayout.addView(deleteButton);  // Add delete button to layout
         addonContainer.addView(addonLayout);
     }
+
+
 
     // Add dynamic size and price fields
     private void addSizeAndPriceFields() {
@@ -151,12 +178,36 @@ public class AddProductActivity extends AppCompatActivity {
         priceInput.setLayoutParams(new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
 
+        // Add delete button
+        ImageButton deleteButton = new ImageButton(this);
+        deleteButton.setImageResource(R.drawable.delete);
+        // Remove the default background to prevent the gray background
+        deleteButton.setBackground(null);
+
+        // Set a larger size for better visibility (try 32dp instead of 24dp)
+        int sizeInDp = 50;  // Adjust based on desired size
+        int sizeInPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, sizeInDp, getResources().getDisplayMetrics());
+
+        // Set layout parameters for the button
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(sizeInPx, sizeInPx);
+        params.setMargins(8, 8, 8, 8); // Adding some margin for better visibility
+        deleteButton.setLayoutParams(params);
+
+        // Set the scale type to ensure the image fits well
+        deleteButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+        // Handle delete action
+        deleteButton.setOnClickListener(v -> sizeContainer.removeView(sizePriceLayout));
+
         sizePriceLayout.addView(sizeInput);
         sizePriceLayout.addView(priceInput);
+        sizePriceLayout.addView(deleteButton);  // Add delete button to layout
         sizeContainer.addView(sizePriceLayout);
 
         sizePriceList.add(new SizePricePair(sizeInput, priceInput));
     }
+
 
     // Save product to Firestore
     private void saveProduct() {

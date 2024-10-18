@@ -133,7 +133,16 @@
                 android:textColor="#000000"
                 android:layout_marginTop="4dp" />
 
-            <LinearLayout
+                <FrameLayout
+                    android:id="@+id/sideMenus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:elevation="10dp"
+
+                    />
+
+                <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -168,13 +177,14 @@
 
                 </RadioGroup>
 
-                <!-- Add Category Button -->
+                <!-- Add Category Button
                 <Button
                     android:layout_width="55dp"
                     android:layout_height="40dp"
                     android:text="+"
                     android:layout_marginLeft="150dp"
                     android:backgroundTint="#D3D3D3"/>
+                    -->
             </LinearLayout>
 
                 <!-- Container for Add-ons -->
@@ -333,13 +343,6 @@
     </ScrollView>
 
     <!-- Side Menu Overlay (Initially Hidden) -->
-    <FrameLayout
-        android:id="@+id/sideMenus"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:elevation="10dp"
-
-         /> <!-- Initially hidden, can be shown dynamically -->
+    <!-- Initially hidden, can be shown dynamically -->
 
 </RelativeLayout>
