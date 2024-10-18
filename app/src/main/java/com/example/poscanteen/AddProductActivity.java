@@ -103,37 +103,36 @@ public class AddProductActivity extends AppCompatActivity {
         sizePriceLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        // Set gravity to center horizontally and vertically
-        sizePriceLayout.setGravity(android.view.Gravity.CENTER);
-
-        // Get the screen width and calculate 10% of it
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int tenPercentWidth = (int) (screenWidth * 0.50);
-
-        // Create size input field
         EditText sizeInput = new EditText(this);
         sizeInput.setHint("Size");
+        sizeInput.setLayoutParams(new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1)); // Setting weight to 1, same as dynamic fields
 
-        // Set specific width for the size input to be 10% of screen width
-        LinearLayout.LayoutParams sizeParams = new LinearLayout.LayoutParams(
-                tenPercentWidth, LinearLayout.LayoutParams.WRAP_CONTENT); // 10% of the screen width
-        sizeParams.setMargins(8, 8, 8, 8); // Add some margin for spacing
-        sizeInput.setLayoutParams(sizeParams);
-
-        // Create price input field
         EditText priceInput = new EditText(this);
         priceInput.setHint("Price");
         priceInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        priceInput.setLayoutParams(new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1)); // Setting weight to 1, same as dynamic fields
 
-        // Set specific width for the price input to be 10% of screen width
-        LinearLayout.LayoutParams priceParams = new LinearLayout.LayoutParams(
-                tenPercentWidth, LinearLayout.LayoutParams.WRAP_CONTENT); // 10% of the screen width
-        priceParams.setMargins(8, 8, 8, 8); // Add some margin for spacing
-        priceInput.setLayoutParams(priceParams);
+        // Add hidden delete button to maintain consistent layout
+        ImageButton deleteButton = new ImageButton(this);
+        deleteButton.setImageResource(R.drawable.delete);
+        deleteButton.setBackground(null);  // Remove the default background
+        deleteButton.setVisibility(View.INVISIBLE);  // Hide the button
+
+        // Set the same size for the button to keep the layout consistent
+        int sizeInDp = 50;  // Adjust based on desired size
+        int sizeInPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, sizeInDp, getResources().getDisplayMetrics());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(sizeInPx, sizeInPx);
+        params.setMargins(8, 8, 8, 8);  // Adding some margin for better visibility
+        deleteButton.setLayoutParams(params);
 
         // Add the size and price input fields to the layout
         sizePriceLayout.addView(sizeInput);
         sizePriceLayout.addView(priceInput);
+        sizePriceLayout.addView(deleteButton);  // Add hidden delete button to the layout
 
         // Add the layout to the container
         sizeContainer.addView(sizePriceLayout);
@@ -266,12 +265,14 @@ public class AddProductActivity extends AppCompatActivity {
         if (currentUser != null) {
             String enteredProductName = productName.getText().toString().trim();
             String descriptionStr = description.getText().toString().trim();
+            String initialSize = sizePriceList.get(0).getSize();
+            String initialPrice = sizePriceList.get(0).getPrice();
 
             RadioGroup radioGroup = findViewById(R.id.radioGroup);
             int selectedId = radioGroup.getCheckedRadioButtonId();
             String category = selectedId != -1 ? ((RadioButton) findViewById(selectedId)).getText().toString() : "";
 
-            if (enteredProductName.isEmpty() || descriptionStr.isEmpty() || category.isEmpty()) {
+            if (enteredProductName.isEmpty()  || category.isEmpty()  || category.isEmpty()  || initialSize.isEmpty() || initialPrice.isEmpty() ) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
