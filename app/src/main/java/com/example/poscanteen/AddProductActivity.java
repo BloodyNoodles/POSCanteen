@@ -1,6 +1,7 @@
 package com.example.poscanteen;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -91,7 +92,57 @@ public class AddProductActivity extends AppCompatActivity {
                 fragment.toggleSideMenu();
             }
         });
+
+        addInitialSizeAndPriceFields();
     }
+
+    // Add the initial size and price fields without delete button
+    private void addInitialSizeAndPriceFields() {
+        LinearLayout sizePriceLayout = new LinearLayout(this);
+        sizePriceLayout.setOrientation(LinearLayout.HORIZONTAL);
+        sizePriceLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        // Set gravity to center horizontally and vertically
+        sizePriceLayout.setGravity(android.view.Gravity.CENTER);
+
+        // Get the screen width and calculate 10% of it
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int tenPercentWidth = (int) (screenWidth * 0.50);
+
+        // Create size input field
+        EditText sizeInput = new EditText(this);
+        sizeInput.setHint("Size");
+
+        // Set specific width for the size input to be 10% of screen width
+        LinearLayout.LayoutParams sizeParams = new LinearLayout.LayoutParams(
+                tenPercentWidth, LinearLayout.LayoutParams.WRAP_CONTENT); // 10% of the screen width
+        sizeParams.setMargins(8, 8, 8, 8); // Add some margin for spacing
+        sizeInput.setLayoutParams(sizeParams);
+
+        // Create price input field
+        EditText priceInput = new EditText(this);
+        priceInput.setHint("Price");
+        priceInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        // Set specific width for the price input to be 10% of screen width
+        LinearLayout.LayoutParams priceParams = new LinearLayout.LayoutParams(
+                tenPercentWidth, LinearLayout.LayoutParams.WRAP_CONTENT); // 10% of the screen width
+        priceParams.setMargins(8, 8, 8, 8); // Add some margin for spacing
+        priceInput.setLayoutParams(priceParams);
+
+        // Add the size and price input fields to the layout
+        sizePriceLayout.addView(sizeInput);
+        sizePriceLayout.addView(priceInput);
+
+        // Add the layout to the container
+        sizeContainer.addView(sizePriceLayout);
+
+        // Store the reference to the first size and price pair (this one can't be deleted)
+        sizePriceList.add(new SizePricePair(sizeInput, priceInput));
+    }
+
+
 
     // Open image file chooser
     private void openFileChooser() {
@@ -225,6 +276,12 @@ public class AddProductActivity extends AppCompatActivity {
                 return;
             }
 
+            // Show loading dialog
+            ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Saving product...");
+            progressDialog.setCancelable(false); // Prevent dialog from being dismissed by tapping outside
+            progressDialog.show();
+
             List<Map<String, String>> addOns = new ArrayList<>();
             for (int i = 0; i < addonContainer.getChildCount(); i++) {
                 LinearLayout layout = (LinearLayout) addonContainer.getChildAt(i);
@@ -265,14 +322,25 @@ public class AddProductActivity extends AppCompatActivity {
                     .add(productData)
                     .addOnSuccessListener(documentReference -> {
                         if (imageUri != null) {
-                            uploadImage(documentReference.getId());
+                            uploadImage(documentReference.getId(), progressDialog); // Pass the progressDialog here
                         } else {
                             clearFields();
                             Toast.makeText(this, "Product added successfully!", Toast.LENGTH_SHORT).show();
                             closeSideMenu();
+
+                            // Dismiss loading dialog
+                            progressDialog.dismiss();
+
+                            // Navigate to the home activity
+                            Intent intent = new Intent(this, home.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
                         }
                     })
+
                     .addOnFailureListener(e -> {
+                        progressDialog.dismiss(); // Dismiss loading dialog on failure
                         Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         }
@@ -291,25 +359,41 @@ public class AddProductActivity extends AppCompatActivity {
     }
 
     // Upload image to Firebase Storage
-    private void uploadImage(String productId) {
+// Upload image to Firebase Storage
+    private void uploadImage(String productId, ProgressDialog progressDialog) {
         StorageReference storageRef = FirebaseStorage.getInstance()
                 .getReference("product_images/" + productId + ".jpg");
-        storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            // Update Firestore with the image URL
-            db.collection("users").document(currentUser.getUid())
-                    .collection("products").document(productId)
-                    .update("imageUrl", uri.toString())
-                    .addOnSuccessListener(aVoid -> {
-                        clearFields();
-                        Toast.makeText(this, "Product added with image!", Toast.LENGTH_SHORT).show();
-                        closeSideMenu();
-                    }).addOnFailureListener(e -> {
-                        Toast.makeText(this, "Error updating image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        })).addOnFailureListener(e -> {
-            Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
+
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    // Update Firestore with the image URL
+                    db.collection("users").document(currentUser.getUid())
+                            .collection("products").document(productId)
+                            .update("imageUrl", uri.toString())
+                            .addOnSuccessListener(aVoid -> {
+                                clearFields();
+                                Toast.makeText(this, "Product added with image!", Toast.LENGTH_SHORT).show();
+                                closeSideMenu();
+
+                                // Dismiss the loading dialog
+                                progressDialog.dismiss();
+
+                                // Navigate to the home activity
+                                Intent intent = new Intent(this, home.class); // 'this' context since we're in an Activity
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish(); // Close the current activity
+                            }).addOnFailureListener(e -> {
+                                progressDialog.dismiss(); // Dismiss the dialog if there's an error
+                                Toast.makeText(this, "Error updating image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                }))
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss(); // Dismiss the dialog if image upload fails
+                    Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
+
 
     // Method to close the side menu
 // Method to close the side menu only if it is open

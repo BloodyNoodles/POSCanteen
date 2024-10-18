@@ -248,6 +248,9 @@
                             android:layout_gravity="start"/>
 
                         <!-- Container to add dynamic size and price EditText inputs -->
+
+
+
                         <LinearLayout
                             android:id="@+id/sizeContainer"
                             android:layout_width="match_parent"
