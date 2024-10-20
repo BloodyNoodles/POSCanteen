@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="1dp"
+
             android:layout_gravity="center_horizontal"
             android:gravity="center">
 
@@ -119,20 +119,30 @@
             android:padding="16dp">
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="EDIT"
+                android:textColor="#ffffff"
+
+                android:backgroundTint="@color/yellow"/>
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="12sp"
                 android:text="CANCEL"
                 android:textColor="#ffffff"
-                android:layout_marginRight="55dp"
+
                 android:backgroundTint="@color/yellow"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_confirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="12sp"
                 android:text="CONFIRM"
                 android:textColor="#ffffff"
                 android:backgroundTint="@color/yellow"/>

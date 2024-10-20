@@ -1,7 +1,10 @@
 package com.example.poscanteen;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +25,7 @@ public class CustomDialogue extends Dialog {
     private TextView quantityValue;
     private int quantity = 1; // Default quantity
     private boolean toastShown = false;
+    Button editButton;
     // Update the constructor to accept productId
     public CustomDialogue(@NonNull Context context) {
         super(context);
@@ -40,6 +44,7 @@ public class CustomDialogue extends Dialog {
         Button decreaseQuantity = findViewById(R.id.decrease_quantity);
         Button increaseQuantity = findViewById(R.id.increase_quantity);
         quantityValue = findViewById(R.id.quantity_value);
+        editButton = findViewById(R.id.button_edit);
 
         // Update the quantity display
         quantityValue.setText(String.valueOf(quantity));
@@ -70,8 +75,13 @@ public class CustomDialogue extends Dialog {
 
         confirmButton.setOnClickListener(v -> dismiss());
         cancelButton.setOnClickListener(v -> dismiss());
-    }
 
+        editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(context, EditProductActivity.class);
+            context.startActivity(intent);
+        });
+
+    }
 
     private void fetchProductDetails(LinearLayout addsOnContainer, LinearLayout sizesContainer) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

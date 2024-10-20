@@ -68,7 +68,7 @@ public class AddProductActivity extends AppCompatActivity {
         addButton = findViewById(R.id.addButton);
         cancelButton = findViewById(R.id.cancelButton);
         imageButton = findViewById(R.id.imageButton);
-        productName = findViewById(R.id.productName);
+        productName = findViewById(R.id.productNameInp);
         description = findViewById(R.id.descriptionInput);
 
         // Set listeners

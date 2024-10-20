@@ -59,6 +59,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:exported="true"/>
+        <activity android:name=".EditProductActivity" android:exported="true"/>
         <activity android:name=".profile" android:exported="true"/>
         <activity android:name=".transactionHistory" android:exported="true"/>
         <activity android:name=".ProductDetailActivity" android:exported="true"/>
