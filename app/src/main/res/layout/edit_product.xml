@@ -255,7 +255,7 @@
                     android:id="@+id/sizesAndPricesButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+ Add Add-ons"
+                    android:text="+ Add Size and Price"
                     android:textSize="12sp"
                     android:textColor="#FFFFFF"
                     android:backgroundTint="@color/blue"

@@ -21,7 +21,7 @@
         <!-- Hamburger Menu Icon -->
         <ImageButton
             android:id="@+id/menubtn"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_marginStart="2dp"
             android:src="@drawable/baseline_menu_24"
