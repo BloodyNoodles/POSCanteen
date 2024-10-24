@@ -57,6 +57,12 @@ public class SideMenuFragment extends Fragment {
         // Toggle side menu visibility on sideBtn click
         sideBtn.setOnClickListener(v -> toggleSideMenu());
 
+        blockingView.setOnClickListener(v -> {
+            if (isMenuVisible) {
+                toggleSideMenu();
+            }
+        });
+
 
         home.setOnClickListener(v -> {
             if (isCurrentActivity(home.class)) {
