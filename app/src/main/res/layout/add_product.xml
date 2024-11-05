@@ -272,26 +272,7 @@
 
 
 
-                <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Description"
-                android:layout_marginLeft="5dp"
-                android:textSize="16sp"
-                android:textColor="#000000"
-                android:layout_marginTop="4dp" />
 
-            <EditText
-                android:paddingStart="20sp"
-                android:id="@+id/descriptionInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/description_border"
-                android:layout_gravity="left"
-                android:layout_marginTop="3dp"
-                android:hint="  Description (Optional)"
-                android:inputType="textMultiLine"
-                android:minLines="3" />
 
 
 
