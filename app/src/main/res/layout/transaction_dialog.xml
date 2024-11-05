@@ -25,31 +25,16 @@
             android:textStyle="bold"/>
     </LinearLayout>
 
-    <!-- Original content -->
-    <TextView
-        android:id="@+id/dialogTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Transaction Details"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:visibility="gone"/> <!-- Hide this since it's replaced by the header k -->
+    <!-- Description Section -->
 
     <TextView
-        android:id="@+id/transactionHeader"
+        android:id="@+id/product_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description:"
+        android:text="Product Name"
         android:layout_marginTop="10dp"/>
 
-    <TextView
-        android:id="@+id/transactionDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lorem Ipsum"
-        android:layout_marginTop="10dp"/>
-
+    <!-- Date Section -->
     <TextView
         android:id="@+id/transactionDate"
         android:layout_width="wrap_content"
@@ -57,28 +42,28 @@
         android:text="Date: 2024-09-28 12:34 PM"
         android:layout_marginTop="10dp"/>
 
+    <!-- Quantity Section -->
+    <TextView
+        android:id="@+id/transactionQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quantity: 2"
+        android:layout_marginTop="10dp"/>
+
+
+    <!-- Total Price Section -->
     <TextView
         android:id="@+id/transactionAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Amount: $5.00"
+        android:text="Total Price: ₱20.00"
         android:layout_marginTop="10dp"/>
 
+    <!-- Order Number Section -->
     <TextView
-        android:id="@+id/transactionItemNumber"
+        android:id="@+id/transactionOrderNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Item No: 123456"
+        android:text="Order Number: 123456"
         android:layout_marginTop="10dp"/>
-
-    <Button
-        android:id="@+id/btnOkay"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:backgroundTint="@color/blue"
-
- 
-        android:text="Okay"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"/>
 </LinearLayout>

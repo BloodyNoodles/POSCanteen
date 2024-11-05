@@ -1,4 +1,5 @@
 package com.example.poscanteen;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,22 +8,24 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import android.widget.ImageButton;
 import com.facebook.FacebookCallback;
 import com.facebook.login.LoginResult;
 import com.facebook.FacebookException;
 
 import java.util.Arrays;
-
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,28 +54,24 @@ public class MainActivity extends AppCompatActivity {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        startActivity(new Intent(MainActivity.this,home.class));
+                        startActivity(new Intent(MainActivity.this, home.class));
                         finish();
                     }
 
                     @Override
                     public void onCancel() {
-                        // App code
+                        // Handle login cancel
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
-                        // App code
+                        // Handle login error
                     }
                 });
 
         ImageButton btnFacebookLogin = findViewById(R.id.btn_facebook_login);
-
-        btnFacebookLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("public_profile"));
-            }
+        btnFacebookLogin.setOnClickListener(view -> {
+            LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("public_profile"));
         });
 
         // Firebase authentication
@@ -94,32 +93,53 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Product click listener setup
+        // Setup product click listener
+        setupProductClickListener();
+    }
+
+    private void setupProductClickListener() {
         View productView = getLayoutInflater().inflate(R.layout.recycler_newproduct, null);
         productClickLayout = productView.findViewById(R.id.productclick);
 
         if (productClickLayout != null) {
             productClickLayout.setOnClickListener(v -> {
-                db.collection("products").get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            CustomDialogue customDialogue = new CustomDialogue(MainActivity.this);
-                            customDialogue.show();
-                            break;
-                        }
-                    } else {
-                        Toast.makeText(MainActivity.this, "Error fetching products", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                if (currentUser != null) {
+                    String userId = currentUser.getUid();
+
+                    // Access the 'products' subcollection of the current user
+                    db.collection("users")
+                            .document(userId)
+                            .collection("products")
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        // Convert document to Product object
+                                        Product product = document.toObject(Product.class);
+
+                                        // Check if product is not null and contains addOns and sizes
+                                        if (product != null) {
+                                            CustomDialogue customDialogue = new CustomDialogue(MainActivity.this, product);
+                                            customDialogue.show();
+                                            break; // Show only one product's dialog for this example
+                                        }
+                                    }
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Error fetching products", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    Toast.makeText(MainActivity.this, "User not authenticated", Toast.LENGTH_SHORT).show();
+                }
             });
         }
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data); // Called first
-        super.onActivityResult(requestCode, resultCode, data); // Called second
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_DIALOGUE && resultCode == RESULT_OK) {
             if (data != null) {
@@ -128,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     // Validation and login methods
     private boolean validateInputs(String email, String password) {
@@ -159,5 +178,4 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }

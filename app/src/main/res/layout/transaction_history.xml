@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/transactionId"
-    tools:context=".transactionHistory">
+    tools:context=".TransactionHistoryActivity">
 
+    <!-- Header -->
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -29,21 +30,29 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="0dp"
-
             android:gravity="center"
             android:text="Transaction History"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </RelativeLayout>
 
+    <!-- Search Bar placed below header -->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_below="@+id/header"
+        app:iconifiedByDefault="false"
+        app:queryHint="Search by Date (dd/MM/yyyy)" />
+
+    <!-- Columns -->
     <RelativeLayout
         android:id="@+id/column"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:background="#00128E"
-        android:layout_below="@id/header"
+        android:layout_below="@+id/searchView"
         android:gravity="center_vertical">
 
         <TextView
@@ -58,17 +67,30 @@
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
-    <ScrollView
+    <!-- RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewHistory"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/column">
+        android:layout_height="0dp"
+        android:layout_below="@id/column"
+        android:layout_above="@id/totalPriceTextView"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/recyclerViewHistory" />
+    <!-- Total Price Display below RecyclerView -->
+    <TextView
+        android:id="@+id/totalPriceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:text="Total Price: ₱0.00"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
 
-    </ScrollView>
+    <!-- Side Menu Fragment Container -->
     <FrameLayout
         android:id="@+id/sideMenus"
         android:layout_width="match_parent"

@@ -44,7 +44,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 .into(holder.imageView);
 
         holder.productClickLayout.setOnClickListener(v -> {
-            CustomDialogue customDialogue = new CustomDialogue((Activity) context);
+            CustomDialogue customDialogue = new CustomDialogue((Activity) context, product); // Pass the selected product
             customDialogue.show();
         });
     }

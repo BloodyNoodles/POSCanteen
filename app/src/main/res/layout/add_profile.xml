@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/white"
     android:id="@+id/profile"
     tools:context=".profile">
@@ -14,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_above="@+id/buttonContainer">
+
         <LinearLayout
             android:id="@+id/profileFormContainer"
             android:layout_width="match_parent"
@@ -54,11 +54,11 @@
 
             <!-- Profile Form -->
             <LinearLayout
-                android:layout_marginHorizontal="10dp"
                 android:id="@+id/profileForm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="21dp">
 
                 <TextView
@@ -71,7 +71,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="10dp" />
 
-
                 <!-- Email Input -->
                 <TextView
                     android:id="@+id/emailTextView"
@@ -82,9 +81,7 @@
                     android:textSize="16sp"
                     android:focusable="false"
                     android:clickable="false"
-                    android:inputType="none"
-                    />
-
+                    android:inputType="none" />
 
                 <EditText
                     android:id="@+id/emailEdit"
@@ -95,8 +92,8 @@
                     android:paddingStart="10dp"
                     android:hint="Email"
                     android:textSize="16sp"
-                    />
-
+                    android:focusable="false"
+                    android:clickable="false" />
 
                 <!-- Current Password Input -->
                 <TextView
@@ -115,8 +112,7 @@
                     android:paddingStart="10dp"
                     android:hint="Current Password"
                     android:textSize="16sp"
-                    android:inputType="textPassword"
-                    />
+                    android:inputType="textPassword" />
 
                 <!-- New Password Input -->
                 <TextView
@@ -134,7 +130,8 @@
                     android:background="@drawable/field_container"
                     android:paddingStart="10dp"
                     android:hint="New Password"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:inputType="textPassword" />
 
                 <!-- Confirm Password Input -->
                 <TextView
@@ -152,7 +149,8 @@
                     android:background="@drawable/field_container"
                     android:paddingStart="10dp"
                     android:hint="Confirm Password"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:inputType="textPassword" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
