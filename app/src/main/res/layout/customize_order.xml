@@ -2,22 +2,31 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#472A2A2A"
-    >
+    android:background="#472A2A2A">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fbffff"
         android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="16dp">
 
-        android:gravity="center_horizontal">
+        <!-- Product Name TextView -->
+        <TextView
+            android:id="@+id/productNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Product Name"
+            android:textSize="24sp"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:padding="16dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-
             android:layout_gravity="center_horizontal"
             android:gravity="center">
 
@@ -27,10 +36,10 @@
                 android:layout_height="wrap_content"
                 android:text="QUANTITY"
                 android:textSize="20sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@android:color/white"
                 android:background="@color/blue"
                 android:padding="8dp"
-                android:gravity="center"/>
+                android:gravity="center" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -41,12 +50,15 @@
 
                 <Button
                     android:id="@+id/decrease_quantity"
-                    android:layout_width="55dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minWidth="55dp"
                     android:backgroundTint="@color/yellow"
                     android:text="-"
                     android:textSize="18sp"
-                    android:textColor="#000000"/>
+                    android:textColor="#000000"
+                    android:contentDescription="Decrease quantity" />
 
                 <TextView
                     android:id="@+id/quantity_value"
@@ -54,65 +66,75 @@
                     android:layout_height="wrap_content"
                     android:text="1"
                     android:textSize="20sp"
-                    android:padding="16dp"/>
+                    android:padding="16dp" />
 
                 <Button
                     android:id="@+id/increase_quantity"
-                    android:layout_width="55dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minWidth="55dp"
                     android:backgroundTint="@color/yellow"
                     android:text="+"
                     android:textSize="18sp"
-                    android:textColor="#000000"/>
+                    android:textColor="#000000"
+                    android:contentDescription="Increase quantity" />
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Add-ons Section -->
         <TextView
             android:id="@+id/addons_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ADDS ON"
+            android:text="ADD-ONS"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@android:color/white"
             android:background="@color/blue"
             android:padding="8dp"
             android:gravity="center"
-            android:layout_marginVertical="10dp"/>
+            android:layout_marginVertical="10dp" />
 
         <LinearLayout
             android:id="@+id/addsOnContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:padding="8dp">
-
-
+            android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_adds_on"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp" />
         </LinearLayout>
 
+        <!-- Sizes Section -->
         <TextView
             android:id="@+id/sizes_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="SIZES"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@android:color/white"
             android:background="@color/blue"
             android:padding="8dp"
             android:gravity="center"
-            android:layout_marginVertical="15dp"/>
+            android:layout_marginVertical="15dp" />
 
         <LinearLayout
             android:id="@+id/sizesContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:padding="8dp">
+            android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_sizes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp" />
         </LinearLayout>
 
+        <!-- Action Buttons -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
@@ -120,32 +142,41 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_edit"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minWidth="80dp"
                 android:textSize="12sp"
                 android:text="EDIT"
                 android:textColor="#ffffff"
-
-                android:backgroundTint="@color/yellow"/>
+                android:backgroundTint="@color/yellow"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="Edit product details" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_cancel"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minWidth="80dp"
                 android:textSize="12sp"
                 android:text="CANCEL"
                 android:textColor="#ffffff"
-
-                android:backgroundTint="@color/yellow"/>
+                android:backgroundTint="@color/yellow"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="Cancel customization" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_confirm"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minWidth="80dp"
                 android:textSize="12sp"
                 android:text="CONFIRM"
                 android:textColor="#ffffff"
-                android:backgroundTint="@color/yellow"/>
+                android:backgroundTint="@color/yellow"
+                android:contentDescription="Confirm customization" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

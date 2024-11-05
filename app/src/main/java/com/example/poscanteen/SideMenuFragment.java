@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -105,12 +104,12 @@ public class SideMenuFragment extends Fragment {
         });
 
         transactionId.setOnClickListener(v -> {
-            if (isCurrentActivity(com.example.poscanteen.transactionHistory.class)) {
+            if (isCurrentActivity(TransactionHistoryActivity.class)) {
                 toggleSideMenu();  // Close side menu if already on Transaction History
             } else {
                 toggleSideMenu();  // Close the side menu
                 transactionId.postDelayed(() -> {
-                    Intent intent = new Intent(getActivity(), com.example.poscanteen.transactionHistory.class);
+                    Intent intent = new Intent(getActivity(), TransactionHistoryActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }, 300);  // Delay in milliseconds to allow animation to finish
@@ -146,14 +145,14 @@ public class SideMenuFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
                 // Define the activities where side menu can be toggled
-                if (isCurrentActivity(home.class) || isCurrentActivity(profile.class) || isCurrentActivity(transactionHistory.class) || isCurrentActivity(AddProductActivity.class)) {
+                if (isCurrentActivity(home.class) || isCurrentActivity(profile.class) || isCurrentActivity(TransactionHistoryActivity.class) || isCurrentActivity(AddProductActivity.class)) {
                     // If in one of the allowed activities, toggle the side menu
                     if (isMenuVisible) {
                         toggleSideMenu();  // Close the side menu if it is open
                     } else {
                         toggleSideMenu();  // Open the side menu if it is closed
                     }
-                } else if (isCurrentActivity(checkout.class)) {
+                } else if (isCurrentActivity(Checkout.class)) {
                     // If in the CheckoutActivity, go back to the home screen
                     Intent intent = new Intent(getActivity(), home.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
